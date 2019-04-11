@@ -1,4 +1,7 @@
 package com.example.joy.service;
 
-public class CustomerService {
+import com.example.joy.model.Customer;
+import org.springframework.data.repository.CrudRepository;
+
+public interface CustomerService extends CrudRepository<Customer, Integer> {
 }
