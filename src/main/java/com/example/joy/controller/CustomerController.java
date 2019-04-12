@@ -31,17 +31,4 @@ public class CustomerController {
         customerRepository.save(customer);
         return customer;
     }
-
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public Customer update(@RequestBody Customer customer, @PathVariable("id") String id) {
-        Customer newCustomer = customerRepository.findById(id).get();
-        newCustomer.setFirstName(customer.getFirstName());
-        newCustomer.setLastName(customer.getLastName());
-        return customerRepository.save(newCustomer);
-    }
-
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public void delete(@PathVariable String id) {
-        customerRepository.deleteById(id);
-    }
 }
