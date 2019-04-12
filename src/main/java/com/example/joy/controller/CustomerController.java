@@ -20,16 +20,28 @@ public class CustomerController {
         return customerRepository.findAll();
     }
 
-    @RequestMapping(value = "/{firstName}", method = RequestMethod.GET)
-    public Customer getCustomerByFirstName(@PathVariable("firstName") String firstName){
-        return customerRepository.findByFirstName(firstName);
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    public Customer getCustomerByFirstName(@PathVariable("id") String id) {
+        return customerRepository.findByFirstName(id);
     }
 
-
     @RequestMapping(value = "/", method = RequestMethod.POST)
-    public Customer createCustomer(@Valid @RequestBody Customer customer) {
-        customer .setFirstName(customer.getFirstName());
+    public Customer create(@Valid @RequestBody Customer customer) {
+        customer.setFirstName(customer.getFirstName());
         customerRepository.save(customer);
         return customer;
+    }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    public Customer update(@RequestBody Customer customer, @PathVariable("id") String id) {
+        Customer newCustomer = customerRepository.findById(id).get();
+        newCustomer.setFirstName(customer.getFirstName());
+        newCustomer.setLastName(customer.getLastName());
+        return customerRepository.save(newCustomer);
+    }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    public void delete(@PathVariable String id) {
+        customerRepository.deleteById(id);
     }
 }
