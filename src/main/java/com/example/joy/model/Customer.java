@@ -19,6 +19,14 @@ public class Customer {
         this.lastName = lastName;
     }
 
+    public BigInteger getId() {
+        return id;
+    }
+
+    public void setId(BigInteger id) {
+        this.id = id;
+    }
+
     public String getFirstName() {
         return firstName;
     }

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.math.BigInteger;
 import java.util.List;
 
 @RestController
@@ -21,14 +22,24 @@ public class CustomerController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public Customer getCustomerByFirstName(@PathVariable("id") String id) {
-        return customerRepository.findByFirstName(id);
+    public Customer getCustomerByFirstName(@PathVariable("id") BigInteger id) {
+        return customerRepository.findById(id);
     }
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
     public Customer create(@Valid @RequestBody Customer customer) {
-        customer.setFirstName(customer.getFirstName());
         customerRepository.save(customer);
         return customer;
+    }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    public void modifyCustomerById(@PathVariable("id") BigInteger id, @Valid @RequestBody Customer customer) {
+        customer.setId(id);
+        customerRepository.save(customer);
+    }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    public void deleteCustomer(@PathVariable BigInteger id) {
+        customerRepository.delete(customerRepository.findById(id));
     }
 }
