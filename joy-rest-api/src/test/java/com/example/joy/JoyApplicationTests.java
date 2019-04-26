@@ -1,4 +1,4 @@
-package test.java.com.example.joy;
+package com.example.joy;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

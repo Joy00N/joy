@@ -1,7 +1,7 @@
 package main.java.com.example.joy.controller;
 
 import com.example.joy.model.Customer;
-import main.java.com.example.joy.repository.CustomerRepository;
+import com.example.joy.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
