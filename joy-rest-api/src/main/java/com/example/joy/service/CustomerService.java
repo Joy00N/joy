@@ -1,4 +1,4 @@
-package main.java.com.example.joy.service;
+package com.example.joy.service;
 
 import com.example.joy.model.Customer;
 import org.springframework.data.repository.CrudRepository;

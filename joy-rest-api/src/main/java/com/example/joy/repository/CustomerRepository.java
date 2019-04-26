@@ -1,4 +1,4 @@
-package main.java.com.example.joy.repository;
+package com.example.joy.repository;
 
 import com.example.joy.model.Customer;
 import org.springframework.data.mongodb.repository.MongoRepository;
