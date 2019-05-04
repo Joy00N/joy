@@ -3,12 +3,11 @@ package com.example.joy.model;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import java.math.BigInteger;
 
-@Document(collection = "customers")
+@Document
 public class Customer {
     @Id
-    public BigInteger id;
+    public String id;
     public String firstName;
     public String lastName;
 
@@ -19,11 +18,11 @@ public class Customer {
         this.lastName = lastName;
     }
 
-    public BigInteger getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(BigInteger id) {
+    public void setId(String id) {
         this.id = id;
     }
 
