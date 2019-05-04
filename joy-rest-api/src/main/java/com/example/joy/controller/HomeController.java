@@ -1,4 +1,4 @@
-package main.java.com.example.joy.controller;
+package com.example.joy.controller;
 
 public class HomeController {
 }
