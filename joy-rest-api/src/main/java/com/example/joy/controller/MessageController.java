@@ -1,4 +1,4 @@
-package main.java.com.example.joy.controller;
+package com.example.joy.controller;
 
 import com.example.joy.model.Message;
 import org.springframework.web.bind.annotation.*;
