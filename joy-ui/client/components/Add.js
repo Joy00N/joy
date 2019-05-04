@@ -13,12 +13,18 @@ class Add extends React.Component {
             month: '',
             year: '',
             messageFromServer: '',
-            modalIsOpen: false
+            modalIsOpen: false,
+
+            fname:'',
+            lname:''
         }
         this.handleSelectChange = this.handleSelectChange.bind(this);
         this.onClick = this.onClick.bind(this);
         this.handleTextChange = this.handleTextChange.bind(this);
         this.insertNewExpense = this.insertNewExpense.bind(this);
+
+        this.insertNewCustomer = this.insertNewCustomer.bind(this);
+
         this.openModal = this.openModal.bind(this);
         this.closeModal = this.closeModal.bind(this);
     }
@@ -58,7 +64,7 @@ class Add extends React.Component {
         }
     }
     onClick(e) {
-        this.insertNewExpense(this);
+        this.insertNewCustomer(this);
     }
     insertNewExpense(e) {
         axios.post('/insert',
@@ -77,6 +83,24 @@ class Add extends React.Component {
             });
         });
     }
+
+    insertNewCustomer(e) {
+        axios.post('/insert',
+            querystring.stringify({
+                fname: e.state.fname,
+                lname: e.state.lname
+            }), {
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                }
+            }).then(function(response) {
+            e.setState({
+                messageFromServer: response.data
+            });
+        });
+    }
+
+
     handleTextChange(e) {
         if (e.target.name == "description") {
             this.setState({
@@ -86,6 +110,16 @@ class Add extends React.Component {
         if (e.target.name == "amount") {
             this.setState({
                 amount: e.target.value
+            });
+        }
+        if (e.target.name == "fname") {
+            this.setState({
+                fname: e.target.value
+            });
+        }
+        if (e.target.name == "lname") {
+            this.setState({
+                lname: e.target.value
             });
         }
     }
@@ -103,6 +137,10 @@ class Add extends React.Component {
                             <Button bsStyle="danger" bsSize="mini" onClick={this.closeModal}><span className="closebtn glyphicon glyphicon-remove"></span></Button>
                         </Link><br/>
                         <fieldset>
+
+                            <label htmlFor="amount">First Name:</label><input type="text" id="fname" name="fname" value={this.state.fname} onChange={this.handleTextChange}></input>
+                            <label htmlFor="amount">Last Name:</label><input type="text" id="lname" name="lname" value={this.state.lname} onChange={this.handleTextChange}></input>
+
                             <label for="description">Description:</label><input type="text" id="description" name="description" value={this.state.description} onChange={this.handleTextChange}></input>
                             <label for="amount">Amount:</label><input type="number" id="amount" name="amount" value={this.state.amount} onChange={this.handleTextChange}></input>
                             <label for="month">Month:</label><select id="month" name="month" value={this.state.month} onChange={this.handleSelectChange}>
