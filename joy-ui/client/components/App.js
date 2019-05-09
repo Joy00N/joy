@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import Add from './Add'
+import Update from './Update'
 
 export default class App extends React.Component{
+
     constructor(){
         super();
         this.state = {
@@ -17,7 +19,7 @@ export default class App extends React.Component{
         this.getData(this, '2016');
     }
 
-    componentDidMount(){
+    componentWillReceiveProps(nextProps) {
         this.getData(this, '2016');
     }
 
@@ -35,12 +37,14 @@ export default class App extends React.Component{
                 <Add selectedMonth={this.state.selectedMonth} selectedYear={this.state.selectedYear} />
                 <table>
                     <thead>
-                    <tr><th></th><th className='desc-col'>Description</th><th className='button-col'>Amount</th><th className='button-col'>Month</th><th className='button-col'>Year</th></tr>
+                    <tr><th></th><th className='desc-col'>Description</th><th className='button-col'>Amount</th><th className='button-col'>Month</th><th className='button-col'>Year</th>
+                    <th className='button-col'>Update</th></tr>
                     </thead>
                     <tbody>
                     {
                         this.state.data.map(function(exp){
-                            return  <tr><td className='counterCell'></td><td className='desc-col'>{exp.description}</td><td className='button-col'>{exp.amount}</td><td className='button-col'>{exp.month}</td><td className='button-col'>{exp.year}</td></tr>
+                            return  <tr><td className='counterCell'></td><td className='desc-col'>{exp.description}</td><td className='button-col'>{exp.amount}</td><td className='button-col'>{exp.month}</td><td className='button-col'>{exp.year}</td>
+                                <td className='button-col'><Update expense={exp} /></td></tr>
                         })
                     }
                     </tbody>
