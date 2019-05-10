@@ -37,6 +37,7 @@ export default class App extends React.Component{
         return (
             <div>
                 <Add selectedMonth={this.state.selectedMonth} selectedYear={this.state.selectedYear} />
+                <Add selectedMonth={this.state.selectedMonth} selectedYear={this.state.selectedYear} />
                 <table>
                     <thead>
                     <tr><th></th><th className='desc-col'>Description</th><th className='button-col'>Amount</th><th className='button-col'>Month</th><th className='button-col'>Year</th><th className='button-col'>Update</th><th className='button-col'>Delete</th></tr>
