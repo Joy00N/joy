@@ -36,7 +36,7 @@ export default class App extends React.Component{
     render() {
         return (
             <div>
-                <Add selectedMonth={this.state.selectedMonth} selectedYear={this.state.selectedYear} />
+                <h2>joy</h2>
                 <Add selectedMonth={this.state.selectedMonth} selectedYear={this.state.selectedYear} />
                 <table>
                     <thead>
