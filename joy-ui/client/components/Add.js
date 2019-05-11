@@ -3,7 +3,9 @@ import {Button} from 'react-bootstrap';
 import Modal from 'react-modal';
 import axios from 'axios';
 import {Link} from 'react-router-dom';
+import autoBind from "react-autobind/src/autoBind";
 var querystring = require('querystring');
+
 class Add extends React.Component {
     constructor() {
         super();
@@ -13,20 +15,9 @@ class Add extends React.Component {
             month: '',
             year: '',
             messageFromServer: '',
-            modalIsOpen: false,
-
-            fname:'',
-            lname:''
+            modalIsOpen: false
         }
-        this.handleSelectChange = this.handleSelectChange.bind(this);
-        this.onClick = this.onClick.bind(this);
-        this.handleTextChange = this.handleTextChange.bind(this);
-        this.insertNewExpense = this.insertNewExpense.bind(this);
-
-        this.insertNewCustomer = this.insertNewCustomer.bind(this);
-
-        this.openModal = this.openModal.bind(this);
-        this.closeModal = this.closeModal.bind(this);
+        autoBind(this);
     }
     openModal() {
         this.setState({
@@ -44,12 +35,32 @@ class Add extends React.Component {
         });
     }
     componentDidMount() {
-        this.setState({
-            month: this.props.selectedMonth
-        });
+        if(this.props.selectedMonth == 'All'){
+            this.setState({
+                month: 'Jan'
+            });
+        }else{
+            this.setState({
+                month: this.props.selectedMonth
+            });
+        }
         this.setState({
             year: this.props.selectedYear
         });
+    }
+    componentWillReceiveProps(nextProps){
+        if(this.props.selectedMonth == 'All'){
+            this.setState({
+                month: 'Jan'
+            });
+        }else{
+            this.setState({
+                month: this.props.selectedMonth
+            });
+        }
+        this.setState({
+            year:nextProps.selectedYear
+        })
     }
     handleSelectChange(e) {
         if (e.target.name == 'month') {
@@ -64,7 +75,7 @@ class Add extends React.Component {
         }
     }
     onClick(e) {
-        this.insertNewCustomer(this);
+        this.insertNewExpense(this);
     }
     insertNewExpense(e) {
         axios.post('/insert',
@@ -83,24 +94,6 @@ class Add extends React.Component {
             });
         });
     }
-
-    insertNewCustomer(e) {
-        axios.post('/insert',
-            querystring.stringify({
-                fname: e.state.fname,
-                lname: e.state.lname
-            }), {
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded"
-                }
-            }).then(function(response) {
-            e.setState({
-                messageFromServer: response.data
-            });
-        });
-    }
-
-
     handleTextChange(e) {
         if (e.target.name == "description") {
             this.setState({
@@ -110,16 +103,6 @@ class Add extends React.Component {
         if (e.target.name == "amount") {
             this.setState({
                 amount: e.target.value
-            });
-        }
-        if (e.target.name == "fname") {
-            this.setState({
-                fname: e.target.value
-            });
-        }
-        if (e.target.name == "lname") {
-            this.setState({
-                lname: e.target.value
             });
         }
     }
@@ -133,14 +116,10 @@ class Add extends React.Component {
                         onRequestClose={this.closeModal}
                         contentLabel="Add Expense"
                         className="Modal">
-                        <Link to={{pathname: '/', search: '' }} style={{ textDecoration: 'none' }}>
+                        <Link to={{pathname: '/', search: '?month='+this.state.month+'&year='+this.state.year }} style={{ textDecoration: 'none' }}>
                             <Button bsStyle="danger" bsSize="mini" onClick={this.closeModal}><span className="closebtn glyphicon glyphicon-remove"></span></Button>
                         </Link><br/>
                         <fieldset>
-
-                            <label htmlFor="amount">First Name:</label><input type="text" id="fname" name="fname" value={this.state.fname} onChange={this.handleTextChange}></input>
-                            <label htmlFor="amount">Last Name:</label><input type="text" id="lname" name="lname" value={this.state.lname} onChange={this.handleTextChange}></input>
-
                             <label for="description">Description:</label><input type="text" id="description" name="description" value={this.state.description} onChange={this.handleTextChange}></input>
                             <label for="amount">Amount:</label><input type="number" id="amount" name="amount" value={this.state.amount} onChange={this.handleTextChange}></input>
                             <label for="month">Month:</label><select id="month" name="month" value={this.state.month} onChange={this.handleSelectChange}>
@@ -158,7 +137,8 @@ class Add extends React.Component {
                             <option value="Dec" id="Dec">December</option>
                         </select>
                             <label for="year">Year:</label><select id="year" name="year" value={this.state.year} onChange={this.handleSelectChange}>
-                            <option value="2016" id="16">2016</option>
+                            <option value="2015" id="17">2015</option>
+                            <option value="2016" id="17">2016</option>
                             <option value="2017" id="17">2017</option>
                             <option value="2018" id="18">2018</option>
                             <option value="2019" id="19">2019</option>
@@ -185,7 +165,7 @@ class Add extends React.Component {
                         className="Modal">
                         <div className='button-center'>
                             <h3>{this.state.messageFromServer}</h3>
-                            <Link to={{pathname: '/', search: '' }} style={{ textDecoration: 'none' }}>
+                            <Link to={{pathname: '/', search: '?month='+this.state.month+'&year='+this.state.year}} style={{ textDecoration: 'none' }}>
                                 <Button bsStyle="success" bsSize="mini" onClick={this.closeModal}>Close the Dialog</Button>
                             </Link>
                         </div>
