@@ -1,14 +1,14 @@
 import React from 'react';
 import Modal from 'react-modal';
 import axios from 'axios';
-import {Button} from 'react-bootstrap';
-import {Link} from 'react-router-dom';
-
+import { Button } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
+import autoBind from "react-autobind/src/autoBind";
 var querystring = require('querystring');
 
 class Update extends React.Component {
-    constructor(props) {
-        super(props);
+    constructor() {
+        super();
         this.state = {
             id: '',
             description: '',
@@ -18,72 +18,63 @@ class Update extends React.Component {
             messageFromServer: '',
             modalIsOpen: false
         }
-
-        this.update = this.update.bind(this);
-        this.handleSelectChange = this.handleSelectChange.bind(this);
-        this.onClick = this.onClick.bind(this);
-        this.handleTextChange = this.handleTextChange.bind(this);
-        this.openModal = this.openModal.bind(this);
-        this.closeModal = this.closeModal.bind(this);
-
-        componentDidMount()
-        {
+        autoBind(this);
+    }
+    componentDidMount() {
+        this.setState({
+            id: this.props.expense._id,
+            description: this.props.expense.description,
+            amount: this.props.expense.amount,
+            month: this.props.expense.month,
+            year: this.props.expense.year
+        });
+    }
+    componentWillReceiveProps(nextProps){
+        this.setState({
+            id: nextProps.expense._id,
+            description: nextProps.expense.description,
+            month:nextProps.expense.month,
+            year:nextProps.expense.year
+        })
+    }
+    openModal() {
+        this.setState({
+            modalIsOpen: true
+        });
+    }
+    closeModal() {
+        this.setState({
+            modalIsOpen: false,
+            messageFromServer: ''
+        });
+    }
+    handleSelectChange(e) {
+        if (e.target.name == "month") {
             this.setState({
-                id: this.props.expense._id,
-                description: this.props.expense.description,
-                amount: this.props.expense.amount,
-                month: this.props.expense.month,
-                year: this.props.expense.year,
+                month: e.target.value
             });
         }
-
-        openModal()
-        {
+        if (e.target.name == "year") {
             this.setState({
-                modalIsOpen: true
+                year: e.target.value
             });
         }
-        closeModal()
-        {
+    }
+    handleTextChange(e) {
+        if (e.target.name == "description") {
             this.setState({
-                modalIsOpen: false,
-                messageFromServer: ''
+                description: e.target.value
             });
         }
-        handleSelectChange(e)
-        {
-            if (e.target.name == "month") {
-                this.setState({
-                    month: e.target.value
-                });
-            }
-            if (e.target.name == "year") {
-                this.setState({
-                    year: e.target.value
-                });
-            }
-        }
-        handleTextChange(e)
-        {
-            if (e.target.name == "description") {
-                this.setState({
-                    description: e.target.value
-                });
-            }
-
-        }
-
         if (e.target.name == "amount") {
             this.setState({
                 amount: e.target.value
             });
         }
     }
-
     onClick(e) {
         this.update(this);
     }
-
     update(e) {
         axios.post('/update',
             querystring.stringify({
@@ -96,39 +87,29 @@ class Update extends React.Component {
                 headers: {
                     "Content-Type": "application/x-www-form-urlencoded"
                 }
-            }).then(function (response) {
+            }).then(function(response) {
             e.setState({
                 messageFromServer: response.data
             });
         });
     }
-
-
     render() {
-        if (this.state.messageFromServer == '') {
+        if(this.state.messageFromServer == ''){
             return (
                 <div>
-                    <Button bsStyle="warning" bsSize="small" onClick={this.openModal}><span
-                        className="glyphicon glyphicon-edit"></span></Button>
+                    <Button bsStyle="warning" bsSize="small" onClick={this.openModal}><span className="glyphicon glyphicon-edit"></span></Button>
                     <Modal
                         isOpen={this.state.modalIsOpen}
                         onRequestClose={this.closeModal}
                         contentLabel="Add Expense"
                         className="Modal">
-                        <Link to={{pathname: '/', search: ''}} style={{textDecoration: 'none'}}>
-                            <Button bsStyle="danger" bsSize="mini" onClick={this.closeModal}><span
-                                className="closebtn glyphicon glyphicon-remove"></span></Button>
+                        <Link to={{pathname: '/', search: '?month='+this.state.month+'&year='+this.state.year }} style={{ textDecoration: 'none' }}>
+                            <Button bsStyle="danger" bsSize="mini" onClick={this.closeModal}><span className="closebtn glyphicon glyphicon-remove"></span></Button>
                         </Link><br/>
                         <fieldset>
-                            <label for="description">Description:</label><input type="text" id="description"
-                                                                                name="description"
-                                                                                value={this.state.description}
-                                                                                onChange={this.handleTextChange}></input>
-                            <label for="amount">Amount:</label><input type="number" id="amount" name="amount"
-                                                                      value={this.state.amount}
-                                                                      onChange={this.handleTextChange}></input>
-                            <label for="month">Month:</label><select id="month" name="month" value={this.state.month}
-                                                                     onChange={this.handleSelectChange}>
+                            <label for="description">Description:</label><input type="text" id="description" name="description" value={this.state.description} onChange={this.handleTextChange}></input>
+                            <label for="amount">Amount:</label><input type="number" id="amount" name="amount" value={this.state.amount} onChange={this.handleTextChange}></input>
+                            <label for="month">Month:</label><select id="month" name="month" value={this.state.month} onChange={this.handleSelectChange}>
                             <option value="Jan" id="Jan">January</option>
                             <option value="Feb" id="Feb">Febrary</option>
                             <option value="Mar" id="Mar">March</option>
@@ -142,8 +123,7 @@ class Update extends React.Component {
                             <option value="Nov" id="Nov">November</option>
                             <option value="Dec" id="Dec">December</option>
                         </select>
-                            <label for="year">Year:</label><select id="year" name="year" value={this.state.year}
-                                                                   onChange={this.handleSelectChange}>
+                            <label for="year">Year:</label><select id="year" name="year" value={this.state.year} onChange={this.handleSelectChange}>
                             <option value="2015" id="17">2015</option>
                             <option value="2016" id="17">2016</option>
                             <option value="2017" id="17">2017</option>
@@ -159,11 +139,11 @@ class Update extends React.Component {
                     </Modal>
                 </div>
             )
-        } else {
+        }
+        else{
             return (
                 <div>
-                    <Button bsStyle="warning" bsSize="small" onClick={this.openModal}><span
-                        className="glyphicon glyphicon-edit"></span></Button>
+                    <Button bsStyle="warning" bsSize="small" onClick={this.openModal}><span className="glyphicon glyphicon-edit"></span></Button>
                     <Modal
                         isOpen={this.state.modalIsOpen}
                         onAfterOpen={this.afterOpenModal}
@@ -172,9 +152,8 @@ class Update extends React.Component {
                         className="Modal">
                         <div className='button-center'>
                             <h3>{this.state.messageFromServer}</h3>
-                            <Link to={{pathname: '/', search: ''}} style={{textDecoration: 'none'}}>
-                                <Button bsStyle="success" bsSize="mini" onClick={this.closeModal}>Close the
-                                    Dialog</Button>
+                            <Link to={{pathname: '/', search: '?month='+this.state.month+'&year='+this.state.year}} style={{ textDecoration: 'none' }}>
+                                <Button bsStyle="success" bsSize="mini" onClick={this.closeModal}>Close the Dialog</Button>
                             </Link>
                         </div>
                     </Modal>
@@ -183,5 +162,4 @@ class Update extends React.Component {
         }
     }
 }
-
 export default Update;
